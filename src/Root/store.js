@@ -1,12 +1,12 @@
-import { createStore, combineReducers } from 'redux'
-import placeReducer from './reducers/placeReducer'
+import { createStore, combineReducers } from 'redux';
+import placeReducer from './reducers/placeReducer';
 
 const rootReducer = combineReducers({
   places: placeReducer
-})
+});
 
 const configureStore = () => {
-  return createStore(rootReducer)
-}
+  return createStore(rootReducer);
+};
 
-export default configureStore
+export default configureStore;

@@ -44,7 +44,7 @@ target 'AwesomeProject' do
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
-  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies'
+  # pod 'react-native-cookies', :path => '../node_modules/react-native-cookies'
 
   target 'AwesomeProjectTests' do
     inherit! :search_paths
