@@ -83,7 +83,7 @@ container: {
   borderBottomColor: 'white',
   borderBottomWidth: 1,
   width: '100%',
-  height: 200,
+  height: 230,
   justifyContent: 'space-around',
   display: 'flex'
 },
