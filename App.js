@@ -34,7 +34,7 @@ import GalleryContainer from './src/components/Gallery/GalleryContainer.js';
           </TouchableOpacity>
             <InstagramLogin
               ref= {ref => this.instagramLogin= ref}
-              clientId='	1e3451b4a250427ba415ee214d5eab98'
+              clientId='1e3451b4a250427ba415ee214d5eab98'
               redirectUrl='http://localhost:8081'
               scopes={['basic']}
               onLoginSuccess={(token) => this.setState({ token })}
@@ -84,19 +84,11 @@ class DetailsScreen extends Component {
     );
   }
 }
-class GalleryContain extends Component {
-  render() {
-    return (
-      <GalleryContainer />
-    )
-  }
-}
 
 const AppNavigator = createStackNavigator(
   {
     Home: Home,
     Details: DetailsScreen,
-    GalleryCont: GalleryContain
   },
   {
     initialRouteName: 'Home',

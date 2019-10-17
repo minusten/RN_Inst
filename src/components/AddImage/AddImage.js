@@ -5,7 +5,7 @@ StyleSheet,
 View,
 Button,
 Text,
-Image, TouchableOpacity
+Image, TouchableOpacity, TextInput, Alert
 } from "react-native";
 import ImagePicker from 'react-native-image-picker'
 import Gallery from "../Gallery/GalleryContainer";
@@ -13,6 +13,7 @@ import GalleryContainer from "../Gallery/GalleryContainer";
 import { connect } from 'react-redux'
 import { addPlace } from '../../Root/actions/place'
 import Geolocation from '@react-native-community/geolocation';
+
 
 class AddImage extends Component {
     constructor(props) {
@@ -27,11 +28,16 @@ class AddImage extends Component {
         places: [],
         placaName: '',
         initialPosition: 'unknown',
-        show: true
-
+        show: true,
+        tags: [], 
+        text: '',
+        showImg: false
       };
     }
+
+    
     componentDidMount() {
+      console.log(this.state.tags)
       Geolocation.getCurrentPosition(
         position => {
           const initialPosition = JSON.stringify(position);
@@ -80,16 +86,43 @@ class AddImage extends Component {
         console.log('copyiedArr', copyiedAray)
         this.props.addPlace(copyiedAray)
         this.setState({ show: false })
-        alert('Image added')
+        Alert.alert('Image added')
       } else {
-        alert('Pls, add img')
+        Alert.alert('Pls, add img')
       }
+      this.setState({
+        pickedImage: ''
+      })
     }
-    
+    addTag = () => {
+    const text = this.state.text.split() 
+    this.state.tags.push(text)
+    console.log(this.state.tags)
+    this.setState({
+      text: ''
+    })
+    }
+
     render() {
+      const { tags } = this.state
       return (
         <View> 
+           
         <View style={styles.container}>
+        <TextInput 
+            placeholder='Enter tag'
+            style={styles.input}
+            onChangeText={text => this.setState({text})}
+            value={this.state.text}
+            />
+            <Button title='Tag' onPress={this.addTag}/>
+            <Text> {tags.map((tag, index) => {
+             return (
+             <View key={index}>
+             <Text style={{color: 'pink'}} >{tag}</Text>
+            </View>
+        )
+      })} </Text>  
           <View style={styles.placeholder}>
             <Image source={this.state.pickedImage} style={styles.previewImage} />
            
@@ -106,7 +139,8 @@ class AddImage extends Component {
            </TouchableOpacity>
           </View>
           </View>
-        <Gallery image={this.state.savedImage} position={this.state.initialPosition}/>
+        <Gallery image={this.state.savedImage} show={this.state.showImg}/>
+    
         </View>
       )
     }
@@ -115,8 +149,8 @@ class AddImage extends Component {
         container: {
           display: 'flex',
           alignItems:"flex-start",
-          marginTop: -210,
-          marginLeft: 200,
+          marginTop: -310,
+          marginLeft: 170,
           width: '100%',
         },
         textStyle: {
@@ -125,18 +159,31 @@ class AddImage extends Component {
           textAlign:"center",
           color:"#fff",
         },
-        placeholder: {
+        input: {
+          height: 35,
+          width: 180,
+          borderColor: '#DDD',
+          borderStyle: 'solid',
           borderWidth: 1,
-          borderColor: "black",
-          backgroundColor: "white",
-          width: 200,
-          height: 110,
-          marginTop:10,
-          borderRadius: 10
+          borderRadius: 5,
+          color: '#FFF',
+          // marginLeft: 210,
+          // marginTop: -95,
+          backgroundColor: '#c9c9c9',
+          
         },
+        // placeholder: {
+        //   borderWidth: 1,
+        //   borderColor: "black",
+        //   backgroundColor: "white",
+        //   width: 170,
+        //   height: 100,
+        //   marginTop: -10,
+        //   borderRadius: 10
+        // },
         button: {
           width: 200,
-          marginTop:55,
+          marginTop:45,
           flexDirection:"row",
           justifyContent: "space-around",
           
@@ -146,7 +193,7 @@ class AddImage extends Component {
           borderColor: "black",
           backgroundColor: '#c9c9c9',
           width: 200,
-          height: 150,
+          height: 130,
           marginTop:10,
           borderRadius: 10
         },
