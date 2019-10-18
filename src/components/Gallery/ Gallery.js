@@ -5,18 +5,20 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Text
 } from 'react-native';
 import GeolocationComponent from '../Geolocation/Geolocation';
 import { connect } from 'react-redux';
-import { deleteImg } from '../../Root/actions/place';
+import { deleteImg, deleteTag } from '../../Root/actions/place';
 
 class Gallery extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectImg: false,
-      showGeo: false
+      showGeo: false,
+      tags: []
     };
   }
   selectImage = () => {
@@ -26,10 +28,12 @@ class Gallery extends React.Component {
     });
     console.log(this.state.selectImg);
     console.log(this.state.showGeo);
+    console.log(this.state.tags);
   };
   deleteImage = (e, index) => {
-    let newArr = this.props.places.places.pop(index);
-    this.props.deleteImg();
+    e.preventDefault();
+    this.props.deleteImg(index);
+    this.props.deleteTag(index);
   };
   render() {
     return (
@@ -40,12 +44,18 @@ class Gallery extends React.Component {
               return (
                 <View style={styles.photo} key={index}>
                   <TouchableOpacity onPress={this.selectImage}>
-                    <TouchableOpacity onPress={this.deleteImage}>
+                    <TouchableOpacity onPress={e => this.deleteImage(e, index)}>
                       <Image
                         source={require('../../images/delete-button.png')}
                         style={styles.delete}
                       />
                     </TouchableOpacity>
+                    <Text style={{ color: 'white' }}>
+                      {' '}
+                      {this.props.tags.tags.map((tag, i) => {
+                        return <Text key={i}> #{tag} </Text>;
+                      })}{' '}
+                    </Text>
                     <Image
                       source={place}
                       style={[
@@ -75,7 +85,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '100%',
     flexWrap: 'wrap',
-    marginTop: 10
+    marginTop: 10,
+    alignItems: 'flex-start'
   },
   // photo: {
   //   marginTop: 5
@@ -88,23 +99,30 @@ const styles = StyleSheet.create({
     // marginTop: 5
   },
   bigStyle: {
-    width: 350,
-    height: 350,
+    width: 340,
+    height: 340,
     borderWidth: 10,
     borderColor: 'black'
   },
   notShowGeo: {
     display: 'none'
   },
+  tags: {
+    color: 'white'
+  },
   delete: {
     height: 10,
     width: 10
   }
 });
+
 const mapDispatchToProps = dispatch => {
   return {
-    delete: index => {
-      dispatch(deleteImg(index));
+    deleteimg: place => {
+      dispatch(deleteImg(place));
+    },
+    deletetag: tag => {
+      dispatch(deleteTag(tag));
     }
   };
 };

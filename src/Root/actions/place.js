@@ -13,3 +13,17 @@ export const deleteImg = id => {
     id: id
   };
 };
+
+export const addTag = tags => {
+  return {
+    type: actionTypes.ADD_TAG,
+    payload: tags
+  };
+};
+
+export const deleteTag = id => {
+  return {
+    type: actionTypes.REMOVE_TAG,
+    id: id
+  };
+};

@@ -1,20 +1,19 @@
 import * as actionTypes from '../actions/types';
 
 const initialState = {
-  places: []
+  tags: []
 };
-
-const placeReducer = (state = initialState, action) => {
+const tagsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.ADD_PLACE:
+    case actionTypes.ADD_TAG:
       return {
         ...state,
-        places: action.payload
+        tags: action.payload
       };
-    case actionTypes.REMOVE_IMG:
+    case actionTypes.REMOVE_TAG:
       console.log('remove', state);
       return {
-        places: state.places.filter((place, index) => {
+        tags: state.tags.filter((tag, index) => {
           return action.id !== index;
         })
       };
@@ -23,4 +22,4 @@ const placeReducer = (state = initialState, action) => {
   }
 };
 
-export default placeReducer;
+export default tagsReducer;

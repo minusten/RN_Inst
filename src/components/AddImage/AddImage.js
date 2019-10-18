@@ -13,8 +13,8 @@ import {
 import ImagePicker from 'react-native-image-picker';
 import Gallery from '../Gallery/GalleryContainer';
 import { connect } from 'react-redux';
-import { addPlace } from '../../Root/actions/place';
-import { deleteImg } from '../../Root/actions/place';
+import { addPlace, addTag } from '../../Root/actions/place';
+import { deleteImg, deleteTag } from '../../Root/actions/place';
 import Geolocation from '@react-native-community/geolocation';
 
 class AddImage extends Component {
@@ -47,10 +47,10 @@ class AddImage extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
   }
-
   reset = () => {
     this.setState({
-      pickedImage: null
+      pickedImage: null,
+      text: ''
     });
   };
   pickImageHandler = () => {
@@ -71,7 +71,7 @@ class AddImage extends Component {
     );
   };
 
-  setImage = () => {
+  setImage = index => {
     const file = {
       uri: this.state.imageSource,
       name: this.state.imageName,
@@ -83,30 +83,24 @@ class AddImage extends Component {
       savedImage: this.state.pickedImage
     });
     let copyiedAray = this.props.places.slice();
+    let tagsArr = this.props.tags.tags.slice();
     if (this.state.pickedImage) {
       copyiedAray.push(this.state.pickedImage);
-      console.log('copyiedArr', copyiedAray);
+      tagsArr.push(this.state.text);
       this.props.addPlace(copyiedAray);
+      this.props.addTag(tagsArr);
       this.setState({ show: false });
       Alert.alert('Image added');
     } else {
       Alert.alert('Pls, add img');
     }
     this.setState({
-      pickedImage: ''
+      pickedImage: '',
+      text: '',
+      tags: this.props.deleteTag(index) //Reducer
     });
   };
-  addTag = () => {
-    const text = this.state.text.split();
-    this.state.tags.push(text);
-    console.log(this.state.tags);
-    this.setState({
-      text: ''
-    });
-  };
-
   render() {
-    const { tags } = this.state;
     return (
       <View>
         <View style={styles.container}>
@@ -116,17 +110,6 @@ class AddImage extends Component {
             onChangeText={text => this.setState({ text })}
             value={this.state.text}
           />
-          <Button title="Tag" onPress={this.addTag} />
-          <Text>
-            {' '}
-            {tags.map((tag, index) => {
-              return (
-                <View key={index}>
-                  <Text style={{ color: 'pink' }}>{tag}</Text>
-                </View>
-              );
-            })}{' '}
-          </Text>
           <View style={styles.placeholder}>
             <Image
               source={this.state.pickedImage}
@@ -154,7 +137,11 @@ class AddImage extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        <Gallery image={this.state.savedImage} show={this.state.showImg} />
+        <Gallery
+          image={this.state.savedImage}
+          show={this.state.showImg}
+          tags={this.state.text}
+        />
       </View>
     );
   }
@@ -175,28 +162,18 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 35,
-    width: 180,
-    borderColor: '#DDD',
+    width: 200,
+    borderColor: 'black',
     borderStyle: 'solid',
     borderWidth: 1,
     borderRadius: 5,
     color: '#FFF',
     // marginLeft: 210,
-    // marginTop: -95,
+    marginTop: 85,
     backgroundColor: '#c9c9c9'
   },
-  // placeholder: {
-  //   borderWidth: 1,
-  //   borderColor: "black",
-  //   backgroundColor: "white",
-  //   width: 170,
-  //   height: 100,
-  //   marginTop: -10,
-  //   borderRadius: 10
-  //},
   button: {
     width: 200,
-    marginTop: 45,
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
@@ -223,6 +200,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     places: state.places.places
+    // tags: state.tags.tags
   };
 };
 
@@ -233,6 +211,12 @@ const mapDispatchToProps = dispatch => {
     },
     delete: index => {
       dispatch(deleteImg(index));
+    },
+    tag: name => {
+      dispatch(addTag(name));
+    },
+    deletetag: tag => {
+      dispatch(deleteTag(tag));
     }
   };
 };

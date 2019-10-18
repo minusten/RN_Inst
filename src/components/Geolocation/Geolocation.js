@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import Geocoder from 'react-native-geocoding';
 
 export default class GeolocationComponent extends React.Component {
   constructor() {
@@ -12,6 +13,7 @@ export default class GeolocationComponent extends React.Component {
     };
   }
   componentDidMount() {
+    // Geocoder.init('AIzaSyCQTqdY3nuhBKoyr42U1AwoOyP4i6LykPs');
     let geoOptions = {
       enableHighAccuracy: false,
       timeOut: 20000
@@ -30,6 +32,7 @@ export default class GeolocationComponent extends React.Component {
       ready: true,
       where: { lat: position.coords.latitude, lng: position.coords.longitude }
     });
+    // Geocoder.from(this.state.where);
   };
   geoFailure = err => {
     this.setState({ error: err.message });
@@ -46,7 +49,7 @@ export default class GeolocationComponent extends React.Component {
         {this.state.ready && (
           <Text style={styles.big}>
             Lat: {Math.round(this.state.where.lat)}
-            <Text />
+            <Text> | </Text>
             Lng: {Math.round(this.state.where.lng)}
           </Text>
         )}
@@ -61,7 +64,7 @@ const styles = StyleSheet.create({
   },
   big: {
     fontSize: 10,
-    color: 'white'
-    // marginTop: 5
+    color: 'white',
+    marginBottom: 10
   }
 });
