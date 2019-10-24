@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import AddImageContainer from '../AddImage/AddImageContainer';
 import Gallery from '../Gallery/GalleryContainer';
+import Example from '../Example/Example';
+import GalleryContainer from '../Gallery/GalleryContainer';
 export default class User extends Component {
   constructor(props) {
     super(props);
@@ -12,12 +14,12 @@ export default class User extends Component {
     };
   }
 
-  showMenu = () => {
-    this.setState({
-      show: !this.state.show
-    });
-    console.log(this.state.show);
-  };
+  // showMenu = () => {
+  //   this.setState({
+  //     show: !this.state.show
+  //   });
+  //   console.log(this.state.show);
+  // };
 
   componentDidMount() {
     const fetchData = url => {
@@ -54,20 +56,18 @@ export default class User extends Component {
           />
           <Text style={styles.text}> Hello, </Text>
           <Text style={styles.username}> {this.state.username} </Text>
-          <TouchableOpacity onPress={this.showMenu} style={styles.addButton}>
+          {/* <TouchableOpacity onPress={this.showMenu} style={styles.addButton}>
             <Image
               source={require('../../images/add.png')}
               style={styles.img}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
-        {this.state.show ? (
-          <View>
-            <AddImageContainer />
-          </View>
-        ) : (
-          <Gallery />
-        )}
+        {/* {this.state.show ? ( */}
+        <View>
+          <AddImageContainer />
+        </View>
+        <GalleryContainer />
       </View>
     );
   }

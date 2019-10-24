@@ -1,9 +1,9 @@
 import * as actionTypes from './types';
 
-export const addPlace = places => {
+export const addImages = images => {
   return {
-    type: actionTypes.ADD_PLACE,
-    payload: places
+    type: actionTypes.ADD_IMAGE,
+    payload: images
   };
 };
 
@@ -25,5 +25,12 @@ export const deleteTag = id => {
   return {
     type: actionTypes.REMOVE_TAG,
     id: id
+  };
+};
+
+export const addPosition = coord => {
+  return {
+    type: actionTypes.ADD_POSITION,
+    payload: coord
   };
 };

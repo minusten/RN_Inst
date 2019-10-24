@@ -1,10 +1,12 @@
 import { createStore, combineReducers } from 'redux';
-import placeReducer from './reducers/placeReducer';
+import imageReducer from './reducers/imageReducer';
 import tagsReducer from './reducers/tagsReducer';
+import positionReducer from './reducers/positionReducer';
 
 const rootReducer = combineReducers({
-  places: placeReducer,
-  tags: tagsReducer
+  images: imageReducer,
+  tags: tagsReducer,
+  coords: positionReducer
 });
 
 const configureStore = () => {

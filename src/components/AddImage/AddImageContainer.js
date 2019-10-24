@@ -1,26 +1,21 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { changeStateProp } from '../actions';
-import { addPlace, addTag, deleteTag } from '../../Root/actions/place';
+import { addImages, addTag, deleteTag } from '../../redux/actions/actions';
 import AddImage from './AddImage';
 
 const mapStateToProps = state => {
-  console.log('state', state);
   return {
-    places: state.places,
+    imges: state.images,
     tags: state.tags
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    ...bindActionCreators(
-      { changeStateProp, addPlace, addTag, deleteTag },
-      dispatch
-    ),
-    myCustomPropsFunc: function(prop, value, reducer) {
-      changeStateProp(prop, value, reducer)(dispatch);
-      return null;
-    }
+    ...bindActionCreators({ addImages, addTag, deleteTag }, dispatch)
+    // myCustomPropsFunc: function(prop, value, reducer) {
+    //   changeStateProp(prop, value, reducer)(dispatch);
+    //   return null;
+    // }
   };
 };
 

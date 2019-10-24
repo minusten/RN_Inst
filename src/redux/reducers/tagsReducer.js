@@ -6,12 +6,12 @@ const initialState = {
 const tagsReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_TAG:
+      console.log('state tags', state);
       return {
         ...state,
         tags: action.payload
       };
     case actionTypes.REMOVE_TAG:
-      console.log('remove', state);
       return {
         tags: state.tags.filter((tag, index) => {
           return action.id !== index;

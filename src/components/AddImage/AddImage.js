@@ -1,20 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  Button,
-  Text,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Alert
-} from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Alert } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import Gallery from '../Gallery/GalleryContainer';
+import ImageContainer from '../Image/ImageContainer';
 import { connect } from 'react-redux';
-import { addPlace, addTag } from '../../Root/actions/place';
-import { deleteImg, deleteTag } from '../../Root/actions/place';
+import { addImages, addTag } from '../../redux/actions/actions';
+import { deleteImg, deleteTag } from '../../redux/actions/actions';
 import Geolocation from '@react-native-community/geolocation';
 
 class AddImage extends Component {
@@ -26,16 +17,15 @@ class AddImage extends Component {
       imageSource: '',
       imageName: '',
       uri: '',
-      addImage: false,
-      places: [],
+      images: [],
       placaName: '',
       show: true,
       tags: [],
       text: '',
-      showImg: false
+      showImg: false,
+      downloadedImg: false
     };
   }
-
   componentDidMount() {
     console.log(this.state.tags);
     Geolocation.getCurrentPosition(
@@ -49,7 +39,7 @@ class AddImage extends Component {
   }
   reset = () => {
     this.setState({
-      pickedImage: null,
+      savedImage: null,
       text: ''
     });
   };
@@ -71,77 +61,24 @@ class AddImage extends Component {
     );
   };
 
-  setImage = index => {
-    const file = {
-      uri: this.state.imageSource,
-      name: this.state.imageName,
-      type: 'image/jpg;base64'
-    };
-    const data = new FormData();
-    data.append('file', file);
-    this.setState({
-      savedImage: this.state.pickedImage
-    });
-    let copyiedAray = this.props.places.slice();
-    let tagsArr = this.props.tags.tags.slice();
-    if (this.state.pickedImage) {
-      copyiedAray.push(this.state.pickedImage);
-      tagsArr.push(this.state.text);
-      this.props.addPlace(copyiedAray);
-      this.props.addTag(tagsArr);
-      this.setState({ show: false });
-      Alert.alert('Image added');
-    } else {
-      Alert.alert('Pls, add img');
-    }
-    this.setState({
-      pickedImage: '',
-      text: '',
-      tags: this.props.deleteTag(index) //Reducer
-    });
-  };
   render() {
     return (
       <View>
         <View style={styles.container}>
-          <TextInput
-            placeholder="Enter tag"
-            style={styles.input}
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
-          />
-          <View style={styles.placeholder}>
-            <Image
-              source={this.state.pickedImage}
-              style={styles.previewImage}
-            />
-          </View>
-          <View style={styles.button}>
+          {!this.state.pickedImage ? (
             <TouchableOpacity onPress={this.pickImageHandler}>
               <Image
                 source={require('../../images/add.png')}
                 style={styles.img}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={this.reset}>
-              <Image
-                source={require('../../images/cross.png')}
-                style={styles.cross}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.setImage}>
-              <Image
-                source={require('../../images/download.png')}
-                style={styles.cross}
-              />
-            </TouchableOpacity>
-          </View>
+          ) : (
+            <ImageContainer
+              pickedImage={this.state.pickedImage}
+              style={styles.image}
+            />
+          )}
         </View>
-        <Gallery
-          image={this.state.savedImage}
-          show={this.state.showImg}
-          tags={this.state.text}
-        />
       </View>
     );
   }
@@ -150,9 +87,9 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'flex-start',
-    marginTop: -310,
-    marginLeft: 170,
-    width: '100%'
+    marginTop: -210,
+    marginLeft: 170
+    // width: '100%'
   },
   textStyle: {
     fontWeight: 'bold',
@@ -160,54 +97,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff'
   },
-  input: {
-    height: 35,
-    width: 200,
-    borderColor: 'black',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderRadius: 5,
-    color: '#FFF',
-    // marginLeft: 210,
-    marginTop: 85,
-    backgroundColor: '#c9c9c9'
-  },
-  button: {
-    width: 200,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-  previewImage: {
-    borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: '#c9c9c9',
-    width: 200,
-    height: 130,
-    marginTop: 10,
-    borderRadius: 10
+  image: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   img: {
-    height: 30,
-    width: 30
+    height: 150,
+    width: 150
   },
-  cross: {
-    height: 20,
-    width: 20,
-    marginTop: 5
+  pickDisplay: {
+    display: 'none'
   }
 });
 
 const mapStateToProps = state => {
   return {
-    places: state.places.places
-    // tags: state.tags.tags
+    images: state.images.images,
+    tags: state.tags.tags
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     add: name => {
-      dispatch(addPlace(name));
+      dispatch(addImages(name));
     },
     delete: index => {
       dispatch(deleteImg(index));
