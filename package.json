@@ -19,7 +19,7 @@
     "moment": "^2.24.0",
     "native-base": "^2.13.8",
     "react": "16.9.0",
-    "react-native": "0.61.1",
+    "react-native": "0.62.3",
     "react-native-auth0": "^2.0.0",
     "react-native-axios": "^0.17.1",
     "react-native-fs": "^2.14.1",
